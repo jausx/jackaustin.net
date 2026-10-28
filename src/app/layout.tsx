@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getAllProjects } from "@/lib/projects";
+import { ARTSTATION_URL } from "@/lib/links";
+import Nav from "./_components/Nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://jackaustin.net"),
   title: "Jack Austin",
   description: "You know what time it is.",
 };
@@ -27,13 +31,10 @@ export default function RootLayout({
             </em>
           </p>
         </header>
-        <section>
-          <nav>
-            <Link href="/">Home</Link>
-            <Link href="/portal-warpin-robot-killer">Portal Warpin&apos; Robot Killer</Link>
-            <Link href="/projects">Projects</Link>
-          </nav>
-        </section>
+        <Nav
+          projects={getAllProjects().map(({ slug, title }) => ({ slug, title }))}
+          artUrl={ARTSTATION_URL}
+        />
         {children}
       </body>
     </html>

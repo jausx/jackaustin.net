@@ -1,14 +1,25 @@
-// 'use client';
+import Link from "next/link";
+import { getAllProjects } from "@/lib/projects";
 
-// import { usePathname } from "next/navigation";
+export const metadata = { title: "Projects | Jack Austin" };
 
 export default function Page() {
-    // const pathname = usePathname();
-    return (
-        <main>
-            <section>
-                <h3>Obligatory Under Construction Message!</h3>
-            </section>
-        </main>
-    );
+  const projects = getAllProjects();
+
+  return (
+    <main>
+      <section>
+        <h3>Projects</h3>
+        <div className="project-grid">
+          {projects.map((p) => (
+            <Link key={p.slug} href={`/projects/${p.slug}`} className="project-card">
+              {p.cover && <img src={p.cover} alt="" />}
+              <h4>{p.title}</h4>
+              <p>{p.summary}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
 }

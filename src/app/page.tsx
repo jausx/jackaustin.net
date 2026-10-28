@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { ARTSTATION_URL } from "@/lib/links";
 
 const itch = "/logos/itch/app-icon.svg"
 const liIn = "/logos/liin/InBug-White.png"
-const ig = "/logos/ig/Instagram_Glyph_Gradient.png";
+const artstation = "https://cdn.simpleicons.org/artstation?viewbox=auto"
 
 const github = "https://cdn.simpleicons.org/github/fff?viewbox=auto"
 const bsky = "https://cdn.simpleicons.org/bluesky?viewbox=auto"
@@ -60,9 +61,9 @@ export default function Home() {
 						</Link>
 					</div>
 					<div className="social-icon">
-						<Link rel="noopener noreferrer" href="https://www.instagram.com/_programmer_jack/">
-							<img src={ig}
-								alt="Instagram"
+						<Link rel="noopener noreferrer" href={ARTSTATION_URL}>
+							<img src={artstation}
+								alt="ArtStation"
 							/>
 						</Link>
 					</div>
