@@ -48,6 +48,7 @@ cover: /games/my_project.png   # file under public/
 links:
   - label: itch.io
     url: https://example.itch.io/my-project
+category: main                 # or "other" for music, skits, etc.
 draft: false                   # true hides it everywhere
 ---
 
@@ -55,3 +56,5 @@ Body in markdown. Raw HTML (iframes, itch widgets, images) works too.
 ```
 
 Content is read only through `src/lib/projects.ts`, so swapping to a CMS later means reimplementing `getAllProjects` / `getProject`.
+
+Standalone pages like the CV live in `content/pages/<slug>.md` (title in frontmatter, body in markdown).

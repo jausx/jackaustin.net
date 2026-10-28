@@ -7,8 +7,12 @@ const PROJECTS_DIR = path.join(process.cwd(), "content", "projects");
 
 export type ProjectLink = { label: string; url: string };
 
+// "main" = career-relevant work; "other" = music, skits, and similar
+export type ProjectCategory = "main" | "other";
+
 export type ProjectMeta = {
   slug: string;
+  category: ProjectCategory;
   title: string;
   date: string;
   summary: string;
@@ -24,17 +28,22 @@ function readProject(file: string): (Project & { draft: boolean }) | null {
   const { data, content } = matter(raw);
   if (!data.title) return null;
 
+  // content is author-trusted; raw HTML (iframes, etc.) passes through
+  const html = marked.parse(content, { async: false }) as string;
+  // tile image: explicit `cover` frontmatter wins, else the first image in the body
+  const firstImage = html.match(/<img[^>]+src=["']([^"']+)["']/)?.[1];
+
   return {
     slug,
+    category: data.category === "other" ? "other" : "main",
     title: String(data.title),
     // gray-matter parses bare YAML dates into Date objects
     date: data.date instanceof Date ? data.date.toISOString().slice(0, 10) : String(data.date ?? ""),
     summary: String(data.summary ?? ""),
-    cover: data.cover ? String(data.cover) : undefined,
+    cover: data.cover ? String(data.cover) : firstImage,
     links: Array.isArray(data.links) ? data.links : [],
     draft: Boolean(data.draft),
-    // content is author-trusted; raw HTML (iframes, etc.) passes through
-    html: marked.parse(content, { async: false }) as string,
+    html,
   };
 }
 
@@ -54,4 +63,19 @@ export function getAllProjects(): Project[] {
 
 export function getProject(slug: string): Project | undefined {
   return loadAll().find((p) => p.slug === slug);
+}
+
+const PAGES_DIR = path.join(process.cwd(), "content", "pages");
+
+export type Page = { title: string; html: string };
+
+// Standalone markdown pages (e.g. the CV) from content/pages/<slug>.md
+export function getPage(slug: string): Page | undefined {
+  const file = path.join(PAGES_DIR, `${slug}.md`);
+  if (!fs.existsSync(file)) return undefined;
+  const { data, content } = matter(fs.readFileSync(file, "utf8"));
+  return {
+    title: String(data.title ?? slug),
+    html: marked.parse(content, { async: false }) as string,
+  };
 }

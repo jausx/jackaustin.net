@@ -32,7 +32,7 @@ export default function RootLayout({
           </p>
         </header>
         <Nav
-          projects={getAllProjects().map(({ slug, title }) => ({ slug, title }))}
+          projects={getAllProjects().map(({ slug, title, category }) => ({ slug, title, category }))}
           artUrl={ARTSTATION_URL}
         />
         {children}

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type NavProject = { slug: string; title: string };
+type NavProject = { slug: string; title: string; category: "main" | "other" };
 
 export default function Nav({
   projects,
@@ -36,6 +36,16 @@ export default function Nav({
 
   const current = (href: string) => (pathname === href ? "page" : undefined);
   const inProjects = pathname.startsWith("/projects");
+  const main = projects.filter((p) => p.category === "main");
+  const other = projects.filter((p) => p.category === "other");
+
+  const item = (p: NavProject) => (
+    <li key={p.slug}>
+      <Link href={`/projects/${p.slug}`} aria-current={current(`/projects/${p.slug}`)}>
+        {p.title}
+      </Link>
+    </li>
+  );
 
   return (
     <section>
@@ -59,18 +69,20 @@ export default function Nav({
           {open && (
             <ul className="nav-menu">
               <li><Link href="/projects">All projects</Link></li>
-              {projects.map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/projects/${p.slug}`} aria-current={current(`/projects/${p.slug}`)}>
-                    {p.title}
-                  </Link>
-                </li>
-              ))}
+              {main.map(item)}
+              {other.length > 0 && (
+                <>
+                  <li className="nav-menu-label" aria-hidden="true">Other Projects</li>
+                  {other.map(item)}
+                </>
+              )}
             </ul>
           )}
         </div>
 
-        <Link rel="noopener noreferrer" href={artUrl}>Art ↗</Link>
+        <Link href="/cv" aria-current={current("/cv")}>CV</Link>
+
+        <Link rel="noopener noreferrer" href={artUrl}>Artstation ↗</Link>
       </nav>
     </section>
   );
